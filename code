@@ -1,0 +1,100 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+#define NumOfRow 13
+#define NumOfCol 6
+
+int **CreateTable()
+{
+    int **a = new int*[NumOfRow];
+    for (int i=0; i<NumOfRow; i++)
+    {
+        a[i] = new int[NumOfCol];
+        for (int j=0; j<5; j++)
+        {
+            a[i][j] = 0;
+        }
+    }
+
+    srand(time(NULL));
+
+    int Number_of_bomb = 10;
+
+    while (Number_of_bomb)
+    {
+        int x = rand() % NumOfRow ;
+        int y = rand() % NumOfCol ;
+        if (a[x][y]==8)
+        {
+            continue;
+        }
+        a[x][y]=8;// so 8 duoc ki hieu la co bomb
+        Number_of_bomb--;
+    };
+
+    // dem so bomb xung quanh 1 o
+
+    for ( int i = 0 ; i < NumOfRow ; i ++ )
+    {
+        for ( int j = 0 ; j < NumOfCol ; j ++ )
+        {
+            if (a[i][j]==8)
+            {
+                continue;
+            }
+            else 
+            {
+                /*   1 2 3
+                     4 0 6
+                     7 8 9
+                */
+                // dau cong
+                if ( (a[i-1][j]==8) && (i>0) ) a[i][j]++;   //2
+                if ( (a[i+1][j]==8) && (i < ( NumOfRow - 1) ) ) a[i][j]++;   //8
+                if ( (a[i][j-1]==8) && (j>0) ) a[i][j]++;   //4
+                if ( (a[i][j+1]==8) && (j < ( NumOfCol - 1) ) ) a[i][j]++;   //6
+
+                // cheo
+                if ( (a[i+1][j+1]==8) && (i < ( NumOfRow - 1) ) && (j < ( NumOfCol - 1) ) ) a[i][j]++; //9
+                if ( (a[i+1][j-1]==8) && (i < ( NumOfRow - 1) ) && (j>0) ) a[i][j]++; //7
+                if ( (a[i-1][j+1]==8) && (i>0) && (j < ( NumOfCol - 1) ) ) a[i][j]++; //3
+                if ( (a[i-1][j-1]==8) && (i>0) && (j>0) ) a[i][j]++; //1
+            }
+        }
+    }
+    return a;
+}
+
+int main()
+{
+    // tao mang a
+
+
+    int** a= CreateTable();
+    
+
+
+
+    for ( int i = 0 ; i < NumOfRow ; i++ )
+    {
+        for ( int j = 0 ; j < NumOfCol ; j++ )
+        {
+            cout << a[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    // Giải phóng bộ nhớ
+    for (int i = 0; i < NumOfRow; i++)
+    {
+        delete[] a[i];
+    }
+    delete[] a;
+
+
+    return 0;    
+
+}
